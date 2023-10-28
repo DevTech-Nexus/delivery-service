@@ -15,6 +15,12 @@ import org.springframework.stereotype.Service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,10 +68,27 @@ public class DeliveryService {
         return delivery;
     }
 
-    public Delivery updateDelivery(int id) {
+    public Delivery updateDelivery(int id) throws URISyntaxException, IOException, InterruptedException {
         Delivery delivery = deliveryRepository.findById(id).orElse(null);
-        if(delivery != null) {
+        if (delivery != null) {
             delivery.setStatus("PAID");
+
+            //TODO:reduce stock levels
+            List<Item> items = delivery.getItems();
+
+            for (Item item : items) {
+                HttpRequest request = HttpRequest.newBuilder().
+                        uri(new URI("http://localhost:8083/deliveries/decrement" + item.getId()))
+                        .header("Content-Type", "application/json")
+                        .PUT(HttpRequest.BodyPublishers.ofString(""))
+                        .build();
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                System.out.println(response.statusCode());
+            }
+
+
             return deliveryRepository.save(delivery);
         }
         return null;

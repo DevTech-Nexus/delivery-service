@@ -6,6 +6,8 @@ import com.devtechnexus.delivery.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -34,7 +36,11 @@ public class DeliveryController {
 
     @PutMapping("/{id}")
     public Delivery paidDelivery(@PathVariable int id) {
-        return service.updateDelivery(id);
+        try {
+            return service.updateDelivery(id);
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DeleteMapping("/{id}")
