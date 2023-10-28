@@ -1,5 +1,6 @@
 package com.devtechnexus.delivery.controller;
 
+import com.devtechnexus.delivery.dto.ParcelDTO;
 import com.devtechnexus.delivery.model.Delivery;
 import com.devtechnexus.delivery.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class DeliveryController {
     }
 
     @PostMapping("/")
-    public Delivery createDelivery(@RequestBody Delivery delivery) {
-        return service.createDelivery(delivery);
+    public Delivery createDelivery(@RequestBody ParcelDTO parcel) {
+        return service.createDelivery(parcel);
     }
 
     @PutMapping("/")

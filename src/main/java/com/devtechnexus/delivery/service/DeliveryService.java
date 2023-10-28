@@ -1,8 +1,11 @@
 package com.devtechnexus.delivery.service;
 
+import com.devtechnexus.delivery.dto.ParcelDTO;
 import com.devtechnexus.delivery.model.Delivery;
 import com.devtechnexus.delivery.model.GeoPoint;
+import com.devtechnexus.delivery.model.Item;
 import com.devtechnexus.delivery.repository.DeliveryRepository;
+import com.devtechnexus.delivery.repository.ItemRepository;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -22,6 +25,9 @@ public class DeliveryService {
     @Autowired
     private DeliveryRepository repository;
 
+    @Autowired
+    private ItemRepository itemRepository;
+
     @Value("${graphhopper.key}")
     private String graphhopperKey;
 
@@ -38,15 +44,34 @@ public class DeliveryService {
         return delivery.orElse(null);
     }
 
-    public Delivery createDelivery(Delivery delivery) {
+    public Delivery createDelivery(ParcelDTO parcel) {
+        Delivery delivery = new Delivery();
+        delivery.setAddress(parcel.getAddress());
+        delivery.setDatetime(parcel.getDatetime());
+        delivery.setStatus(parcel.getStatus());
+        delivery.setUserId(parcel.getUserId());
+        delivery.setDatetime(parcel.getDatetime());
+
+        for(Item item : parcel.getContents()) {
+            Item i = new Item();
+            i.setItemid(item.getItemid());
+            i.setName(item.getName());
+            i.setPrice(item.getPrice());
+            i.setOid(delivery.getId());
+
+            itemRepository.save(i);
+        }
+
         return repository.save(delivery);
     }
 
     public Delivery updateDelivery(Delivery delivery) {
+
         return repository.save(delivery);
     }
 
     public void deleteDelivery(int id) {
+        itemRepository.deleteByOid(id);
         repository.deleteById(id);
     }
 
