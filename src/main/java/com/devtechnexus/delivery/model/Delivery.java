@@ -5,6 +5,7 @@ import lombok.Data;
 
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,5 +29,8 @@ public class Delivery {
 
     @Column(name = "status")
     private String status;
+
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
+    private List<Item> items;
 
 }

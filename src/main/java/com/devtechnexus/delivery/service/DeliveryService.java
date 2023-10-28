@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +22,7 @@ import java.util.Optional;
 public class DeliveryService {
 
     @Autowired
-    private DeliveryRepository repository;
+    private DeliveryRepository deliveryRepository;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -36,11 +35,11 @@ public class DeliveryService {
 
 
     public List<Delivery> getAll() {
-        return repository.findAll();
+        return deliveryRepository.findAll();
     }
 
     public Delivery getDeliveryByID(int id) {
-        Optional<Delivery> delivery = repository.findById(id);
+        Optional<Delivery> delivery = deliveryRepository.findById(id);
         return delivery.orElse(null);
     }
 
@@ -52,32 +51,42 @@ public class DeliveryService {
         delivery.setUserId(parcel.getUserId());
         delivery.setDatetime(parcel.getDatetime());
 
-        for(Item item : parcel.getContents()) {
-            Item i = new Item();
-            i.setItemid(item.getItemid());
-            i.setName(item.getName());
-            i.setPrice(item.getPrice());
-            i.setOid(delivery.getId());
+        deliveryRepository.save(delivery);
 
-            itemRepository.save(i);
+        for (Item item : parcel.getContents()) {
+            item.setDelivery(delivery);
+
+            itemRepository.save(item);
         }
 
-        return repository.save(delivery);
+        return delivery;
     }
 
     public Delivery updateDelivery(Delivery delivery) {
 
-        return repository.save(delivery);
+        return deliveryRepository.save(delivery);
     }
 
     public void deleteDelivery(int id) {
-        itemRepository.deleteByOid(id);
-        repository.deleteById(id);
+        Delivery delivery = deliveryRepository.findById(id).orElse(null);
+        if (delivery != null) {
+            List<Item> items = delivery.getItems();
+
+            // Delete each item from the database
+            itemRepository.deleteAll(items);
+
+            // Clear the items list in the delivery entity
+            delivery.getItems().clear();
+
+            // Update the delivery to remove the items association
+            deliveryRepository.save(delivery);
+        }
+        deliveryRepository.deleteById(id);
     }
 
     /**
      * uses graphhopper's routing API.
-     * 
+     *
      * @param address address of the destination
      * @return distance (in km) to the destination from the store location
      */
@@ -90,26 +99,25 @@ public class DeliveryService {
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("https://graphhopper.com/api/1/route?point=" + source.getLat() + "," + source.getLon() + "&point=" + destination.getLat() + ","+ destination.getLon() + "&profile=car&locale=de&calc_points=false&key=" + graphhopperKey)
+                    .url("https://graphhopper.com/api/1/route?point=" + source.getLat() + "," + source.getLon() + "&point=" + destination.getLat() + "," + destination.getLon() + "&profile=car&locale=de&calc_points=false&key=" + graphhopperKey)
                     .get()
                     .build();
 
-                Response response = client.newCall(request).execute();
-                if (response.isSuccessful()) {
-                    String jsonResponse = response.body().string();
-                    JSONObject jsonObject = new JSONObject(jsonResponse);
-                    JSONArray paths = jsonObject.getJSONArray("paths");
-                    if (paths.length() > 0) {
-                        JSONObject path = paths.getJSONObject(0);
-                        return path.getDouble("distance") / 1000;
-                    } else {
-                        return -1;
-                    }
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String jsonResponse = response.body().string();
+                JSONObject jsonObject = new JSONObject(jsonResponse);
+                JSONArray paths = jsonObject.getJSONArray("paths");
+                if (paths.length() > 0) {
+                    JSONObject path = paths.getJSONObject(0);
+                    return path.getDouble("distance") / 1000;
                 } else {
                     return -1;
                 }
-        }
-        catch (Exception e) {
+            } else {
+                return -1;
+            }
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -117,7 +125,7 @@ public class DeliveryService {
     private GeoPoint getLocation(String address) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("https://graphhopper.com/api/1/geocode?q=" +address +"&locale=de&key="+ graphhopperKey)
+                .url("https://graphhopper.com/api/1/geocode?q=" + address + "&locale=de&key=" + graphhopperKey)
                 .get()
                 .build();
 
@@ -144,7 +152,6 @@ public class DeliveryService {
         }
         return null;
     }
-
 
 
 }

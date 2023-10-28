@@ -12,9 +12,6 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="oid")
-    private int oid;
-
     @Column(name = "itemid")
     private int itemid;
 
@@ -24,5 +21,7 @@ public class Item {
     @Column(name = "price")
     private double price;
 
-
+    @ManyToOne
+    @JoinColumn(name = "oid") // This specifies the foreign key column in the Item table
+    private Delivery delivery;
 }
