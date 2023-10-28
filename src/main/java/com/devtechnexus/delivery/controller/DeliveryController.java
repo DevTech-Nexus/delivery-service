@@ -22,8 +22,8 @@ public class DeliveryController {
     }
 
     @GetMapping("/{id}")
-    public List<Delivery> getDeliveryByUserID(@PathVariable String userid) {
-        return service.getDeliveryByID(userid);
+    public List<Delivery> getDeliveryByUserID(@PathVariable String id) {
+        return service.getDeliveryByID(id);
     }
 
 
