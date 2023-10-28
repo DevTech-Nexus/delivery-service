@@ -62,9 +62,13 @@ public class DeliveryService {
         return delivery;
     }
 
-    public Delivery updateDelivery(Delivery delivery) {
-
-        return deliveryRepository.save(delivery);
+    public Delivery updateDelivery(int id) {
+        Delivery delivery = deliveryRepository.findById(id).orElse(null);
+        if(delivery != null) {
+            delivery.setStatus("PAID");
+            return deliveryRepository.save(delivery);
+        }
+        return null;
     }
 
     public void deleteDelivery(int id) {

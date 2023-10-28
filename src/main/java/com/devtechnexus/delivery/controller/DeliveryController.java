@@ -32,9 +32,9 @@ public class DeliveryController {
         return service.createDelivery(parcel);
     }
 
-    @PutMapping("/")
-    public Delivery updateDelivery(@RequestBody Delivery delivery) {
-        return service.updateDelivery(delivery);
+    @PutMapping("/{id}")
+    public Delivery paidDelivery(@PathVariable int id) {
+        return service.updateDelivery(id);
     }
 
     @DeleteMapping("/{id}")
