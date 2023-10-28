@@ -17,13 +17,25 @@
 
 CREATE DATABASE delivery;
 
-CREATE TABLE delivery (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  product_id INT NOT NULL,
-  quantity FLOAT NOT NULL,
-  address VARCHAR(255) ,
-  datetime DATE NOT NULL,
-  status VARCHAR(10)
-                      );
+CREATE TABLE delivery
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    user_id  INT  NOT NULL,
+    address  VARCHAR(255),
+    datetime DATE NOT NULL,
+    status   VARCHAR(10)
+);
+
+CREATE TABLE items
+(
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  oid         INT,
+  itemid      INT,
+  name        VARCHAR(255),
+  price       FLOAT,
+
+  FOREIGN KEY (oid) REFERENCES delivery (id)
+
+);
+)
 ```

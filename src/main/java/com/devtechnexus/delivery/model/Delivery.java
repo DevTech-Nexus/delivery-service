@@ -19,13 +19,6 @@ public class Delivery {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "product_id")
-    private int productId;
-
-
-    @Column(name = "quantity")
-    private float quantity;
-
     @Column(name = "address")
     private String address;
 
@@ -35,6 +28,5 @@ public class Delivery {
 
     @Column(name = "status")
     private String status;
-
 
 }
