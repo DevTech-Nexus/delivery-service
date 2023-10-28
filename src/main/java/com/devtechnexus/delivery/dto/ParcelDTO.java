@@ -10,7 +10,7 @@ import java.util.List;
 public class ParcelDTO {
 
     private List<Item> contents;
-    private int userId;
+    private String userId;
     private String address;
     private Timestamp datetime;
     private String status;

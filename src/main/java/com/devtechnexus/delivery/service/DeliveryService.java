@@ -35,7 +35,7 @@ public class DeliveryService {
 
 
     public List<Delivery> getAll() {
-        return deliveryRepository.findAll();
+        return deliveryRepository.getAll();
     }
 
     public Delivery getDeliveryByID(int id) {

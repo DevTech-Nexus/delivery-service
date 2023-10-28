@@ -1,5 +1,6 @@
 package com.devtechnexus.delivery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class Delivery {
     private int id;
 
     @Column(name = "user_id")
-    private int userId;
+    private String userId;
 
     @Column(name = "address")
     private String address;
@@ -30,6 +31,7 @@ public class Delivery {
     @Column(name = "status")
     private String status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
     private List<Item> items;
 
