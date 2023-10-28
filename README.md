@@ -26,7 +26,7 @@ CREATE TABLE delivery
     status   VARCHAR(10)
 );
 
-CREATE TABLE items
+CREATE TABLE item
 (
   id          INT PRIMARY KEY AUTO_INCREMENT,
   oid         INT,
