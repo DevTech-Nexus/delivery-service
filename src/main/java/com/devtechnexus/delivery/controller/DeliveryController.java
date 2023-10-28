@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/deliveries")
+@CrossOrigin
 public class DeliveryController {
 
     @Autowired
