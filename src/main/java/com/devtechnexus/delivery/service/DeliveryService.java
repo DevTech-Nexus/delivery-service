@@ -38,9 +38,9 @@ public class DeliveryService {
         return deliveryRepository.getAll();
     }
 
-    public Delivery getDeliveryByID(int id) {
-        Optional<Delivery> delivery = deliveryRepository.findById(id);
-        return delivery.orElse(null);
+    public List<Delivery> getDeliveryByID(String id) {
+        List<Delivery> delivery = deliveryRepository.findByUserId(id);
+        return delivery;
     }
 
     public Delivery createDelivery(ParcelDTO parcel) {

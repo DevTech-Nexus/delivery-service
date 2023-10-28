@@ -22,9 +22,10 @@ public class DeliveryController {
     }
 
     @GetMapping("/{id}")
-    public Delivery getDeliveryByID(@PathVariable int id) {
-        return service.getDeliveryByID(id);
+    public List<Delivery> getDeliveryByUserID(@PathVariable String userid) {
+        return service.getDeliveryByID(userid);
     }
+
 
     @PostMapping("/")
     public Delivery createDelivery(@RequestBody ParcelDTO parcel) {
@@ -42,12 +43,11 @@ public class DeliveryController {
     }
 
     /**
-     *
      * @param destination
      * @return distance in km to the destination from the store
      */
     @GetMapping("/route")
-    public double getDistance(@RequestParam(name="destination") String destination) {
+    public double getDistance(@RequestParam(name = "destination") String destination) {
         return service.getDistanceFromAPI(destination);
     }
 }

@@ -14,4 +14,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
 
     @Query("SELECT d FROM Delivery d")
     public List<Delivery> getAll();
+
+    public List<Delivery> findByUserId(String userId);
 }
