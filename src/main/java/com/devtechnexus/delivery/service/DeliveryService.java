@@ -181,5 +181,9 @@ public class DeliveryService {
     }
 
 
+    public List<Item> getDeliveryByItemID(int id) {
+        List<Item> items = deliveryRepository.findDeliveriesById(id);
+        return items;
+    }
 }
 

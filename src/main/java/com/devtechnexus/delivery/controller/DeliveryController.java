@@ -2,6 +2,7 @@ package com.devtechnexus.delivery.controller;
 
 import com.devtechnexus.delivery.dto.ParcelDTO;
 import com.devtechnexus.delivery.model.Delivery;
+import com.devtechnexus.delivery.model.Item;
 import com.devtechnexus.delivery.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,10 @@ public class DeliveryController {
         return service.getDeliveryByID(id);
     }
 
+    @GetMapping("/items/{id}")
+    public List<Item> getItemsInDelivery(@PathVariable int id) {
+        return service.getDeliveryByItemID(id);
+    }
 
     @PostMapping("/")
     public Delivery createDelivery(@RequestBody ParcelDTO parcel) {
