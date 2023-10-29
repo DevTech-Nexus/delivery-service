@@ -43,9 +43,10 @@ public class DeliveryController {
     public Delivery paidDelivery(@PathVariable int id) {
         try {
             return service.updateDelivery(id);
-        } catch (URISyntaxException | IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @DeleteMapping("/{id}")
