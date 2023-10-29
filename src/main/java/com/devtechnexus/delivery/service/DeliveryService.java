@@ -68,27 +68,10 @@ public class DeliveryService {
         return delivery;
     }
 
-    public Delivery updateDelivery(int id) throws URISyntaxException, IOException, InterruptedException {
+    public Delivery updateDelivery(int id) {
         Delivery delivery = deliveryRepository.findById(id).orElse(null);
         if (delivery != null) {
             delivery.setStatus("PAID");
-
-            //TODO:reduce stock levels
-            List<Item> items = delivery.getItems();
-
-            for (Item item : items) {
-                HttpRequest request = HttpRequest.newBuilder().
-                        uri(new URI("http://localhost:8083/deliveries/decrement" + item.getId()))
-                        .header("Content-Type", "application/json")
-                        .PUT(HttpRequest.BodyPublishers.ofString(""))
-                        .build();
-
-                HttpClient client = HttpClient.newHttpClient();
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                System.out.println(response.statusCode());
-            }
-
-
             return deliveryRepository.save(delivery);
         }
         return null;
