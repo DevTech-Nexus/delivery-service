@@ -29,6 +29,11 @@ public class DeliveryController {
         return service.getDeliveryByID(id);
     }
 
+    /**
+     * get items from a delivery
+     * @param id id of the delivery
+     * @return list of items under the delivery
+     */
     @GetMapping("/items/{id}")
     public List<Item> getItemsInDelivery(@PathVariable int id) {
         return service.getDeliveryByItemID(id);
@@ -48,12 +53,7 @@ public class DeliveryController {
         }
         return null;
     }
-
-    @DeleteMapping("/{id}")
-    public void deleteDelivery(@PathVariable int id) {
-        service.deleteDelivery(id);
-    }
-
+    
     /**
      * @param destination
      * @return distance in km to the destination from the store

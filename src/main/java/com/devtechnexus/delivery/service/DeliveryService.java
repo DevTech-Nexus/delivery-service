@@ -45,8 +45,7 @@ public class DeliveryService {
     }
 
     public List<Delivery> getDeliveryByID(String id) {
-        List<Delivery> delivery = deliveryRepository.findByUserId(id);
-        return delivery;
+        return deliveryRepository.findByUserId(id);
     }
 
     public Delivery createDelivery(ParcelDTO parcel) {
@@ -77,22 +76,6 @@ public class DeliveryService {
         return null;
     }
 
-    public void deleteDelivery(int id) {
-        Delivery delivery = deliveryRepository.findById(id).orElse(null);
-        if (delivery != null) {
-            List<Item> items = delivery.getItems();
-
-            // Delete each item from the database
-            itemRepository.deleteAll(items);
-
-            // Clear the items list in the delivery entity
-            delivery.getItems().clear();
-
-            // Update the delivery to remove the items association
-            deliveryRepository.save(delivery);
-        }
-        deliveryRepository.deleteById(id);
-    }
 
     /**
      * uses graphhopper's routing API.
@@ -163,7 +146,11 @@ public class DeliveryService {
         return null;
     }
 
-
+    /**
+     * generates a reciprocal view of the item <=> delivery relationship
+     * @param id
+     * @return a list of items and their delivery details
+     */
     public List<Item> getDeliveryByItemID(int id) {
         List<Item> items = deliveryRepository.findDeliveriesById(id);
         return items;
